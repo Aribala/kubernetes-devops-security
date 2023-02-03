@@ -6,7 +6,7 @@ pipeline {
             steps {
               sh "mvn clean package -DskipTests=true"
               archive 'target/*.jar' //so that they can be downloaded later
-              echo "PUSH BUILD SUCCESS"
+              echo "PUSH BUILD SUCCESS!!!"
             }
         }   
     }
