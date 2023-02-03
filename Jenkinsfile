@@ -8,6 +8,18 @@ pipeline {
               archive 'target/*.jar' //so that they can be downloaded later
               echo "PUSH BUILD SUCCESS!!!"
             }
+        } 
+        
+        stage('Unit Test Using Jacoco') {
+            steps {
+              sh "mvn test"
+            }
+            post {
+                always{
+                    junit 'target/surefire-reports/*.xml'
+                    jacoco execPattern: 'target/jacoco.exec'
+                }
+            }
         }   
     }
 }
