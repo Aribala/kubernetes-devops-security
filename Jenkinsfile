@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment{
-    imageName = 'aribala/numeric-app:${GIT_COMMIT}'
+    imageName = "aribala/numeric-app:${GIT_COMMIT}"
   }
 
   stages {
