@@ -21,7 +21,8 @@ pipeline {
                 }
             }
         }
-        stage('Unit Test Using Jacoco') {
+        
+        stage('Sonarqube test') {
             steps {
               sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-app  -Dsonar.host.url=http://aribala-devsecops.eastus.cloudapp.azure.com:9000 -Dsonar.login=sqp_9558c74c7b69630ce736ed34c7f983c1036e609b"
             }
