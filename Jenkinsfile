@@ -1,9 +1,9 @@
 pipeline {
   agent any
 
-//   environment{
-//     imageName = "aribala/numeric-app"
-//   }
+  environment{
+    imageName = 'aribala/numeric-app:""$GIT_COMMIT""'
+  }
 
   stages {
       stage('Build Artifact') {
@@ -51,10 +51,10 @@ pipeline {
                     "Kubesec Scan": {
                         sh "bash kubesec-scan.sh"
                     }
-                    // ,
-                    // "Trivy Scan": {
-                    //     sh "bash trivy-scan.sh"
-                    // }
+                    ,
+                    "Trivy Scan": {
+                        sh "bash trivy-scan.sh"
+                    }
                 )                
             }
         }
