@@ -3,6 +3,10 @@ pipeline {
 
   environment{
     imageName = "aribala/numeric-app:${GIT_COMMIT}"
+    serviceName = "devsecops-svc"
+    applicationURL = "http://http://aribala-devsecops.eastus.cloudapp.azure.com/"
+    applicationURI = "/increment/99"
+    deploymentName = "devsecops"
   }
 
   stages {
@@ -17,12 +21,6 @@ pipeline {
         stage('Unit Test Using Jacoco') {
             steps {
               sh "mvn test"
-            }
-            post {
-                always{
-                    junit 'target/surefire-reports/*.xml'
-                    jacoco execPattern: 'target/jacoco.exec'
-                }
             }
         }
         
@@ -66,6 +64,29 @@ pipeline {
 	              sh "kubectl apply -f k8s_deployment_service.yaml"
             	}
             }
-        }    
+        }
+
+        stage('Integration Test') {
+            steps {
+                script {
+                    try {
+                        withKubeConfig([credentialsId: "kubeconfig"]){
+                            sh "bash integration-test.sh"
+                        }
+                    } catch(e) {
+                        withKubeConfig([credentialsId: "kubeconfig"]){
+                            sh "kubectl -n default rollout undo deploy ${deploymentName}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+            jacoco execPattern: 'target/jacoco.exec'
+        }
     }
 }
