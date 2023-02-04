@@ -1,9 +1,9 @@
 pipeline {
   agent any
 
-  environment{
-    imageName = "aribala/numeric-app"
-  }
+//   environment{
+//     imageName = "aribala/numeric-app"
+//   }
 
   stages {
       stage('Build Artifact') {
