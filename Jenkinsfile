@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment{
-    imageName = "devsecops-container"
+    imageName = "aribala/numeric-app:$GIT_COMMIT"
   }
 
   stages {
