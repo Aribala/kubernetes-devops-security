@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  environment{
+    imageName = "devsecops-container"
+  }
+
   stages {
       stage('Build Artifact') {
             steps {
