@@ -4,7 +4,7 @@ pipeline {
   environment{
     imageName = "aribala/numeric-app:${GIT_COMMIT}"
     serviceName = "devsecops-svc"
-    applicationURL = "http://http://aribala-devsecops.eastus.cloudapp.azure.com"
+    applicationURL = "http://aribala-devsecops.eastus.cloudapp.azure.com"
     applicationURI = "/increment/99"
     deploymentName = "devsecops"
   }
