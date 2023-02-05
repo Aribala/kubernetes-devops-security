@@ -103,7 +103,7 @@ pipeline {
                     },
                     "Rollout Status": {
                         withKubeConfig([credentialsId: "kubeconfig"]){
-                            sh "kubectl -n prod apply -f k8s_PROD_deployment_rollout-status.sh"
+                            sh "bash k8s_PROD_deployment_rollout-status.sh"
                         }
                     }
                 )
