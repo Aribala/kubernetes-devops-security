@@ -1,3 +1,5 @@
+@library('slack-notification') _
+
 pipeline {
   agent any
 
@@ -97,6 +99,7 @@ pipeline {
             jacoco execPattern: 'target/jacoco.exec'
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP Report', reportTitles: 'OWASP ZAP Report', useWrapperFileDirectly: true])
 
+            slackNotifications currentBuild.result
             cleanWs()
         }
     }
