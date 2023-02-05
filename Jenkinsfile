@@ -59,36 +59,54 @@ pipeline {
             }
         }
 
-        stage('Kubernetes Deployment - DEV') {
-            steps {
-            	withKubeConfig([credentialsId: "kubeconfig"]){
-	              sh "sed -i 's#replace#aribala/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
-	              sh "kubectl apply -f k8s_deployment_service.yaml"
-            	}
-            }
-        }
+        // stage('Kubernetes Deployment - DEV') {
+        //     steps {
+        //     	withKubeConfig([credentialsId: "kubeconfig"]){
+	    //           sh "sed -i 's#replace#aribala/numeric-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
+	    //           sh "kubectl apply -f k8s_deployment_service.yaml"
+        //     	}
+        //     }
+        // }
 
-        stage('Integration Test') {
+        // stage('Integration Test') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 withKubeConfig([credentialsId: "kubeconfig"]){
+        //                     sh "bash integration-test.sh"
+        //                 }
+        //             } catch(e) {
+        //                 withKubeConfig([credentialsId: "kubeconfig"]){
+        //                     sh "kubectl -n default rollout undo deploy ${deploymentName}"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage('OWASP ZAP -DAST') {
+        //     steps {
+        //         withKubeConfig([credentialsId: "kubeconfig"]){
+        //             sh "bash zap.sh"
+        //         }
+        //     }
+        // }
+
+        stage('K8S Deployment -PROD') {
             steps {
-                script {
-                    try {
+                parallel(
+                    "Deployment": {
                         withKubeConfig([credentialsId: "kubeconfig"]){
-                            sh "bash integration-test.sh"
+                            sh "sed -i 's#replace#${imageName}#g' k8s_PROD_deployment_service.yaml"
+                            sh "kubectl -n prod apply -f k8s_PROD_deployment_service.yaml"
                         }
-                    } catch(e) {
+                    },
+                    "Rollout Status": {
                         withKubeConfig([credentialsId: "kubeconfig"]){
-                            sh "kubectl -n default rollout undo deploy ${deploymentName}"
+                            sh "kubectl -n prod apply -f k8s_PROD_deployment_rollout-status.sh"
                         }
                     }
-                }
-            }
-        }
-
-        stage('OWASP ZAP -DAST') {
-            steps {
-                withKubeConfig([credentialsId: "kubeconfig"]){
-                    sh "bash zap.sh"
-                }
+                )
             }
         }
     }
