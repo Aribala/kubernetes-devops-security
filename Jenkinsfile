@@ -1,4 +1,4 @@
-@library('slack-notification') _
+@Library('slack-notification') _
 
 pipeline {
   agent any
