@@ -81,12 +81,21 @@ pipeline {
                 }
             }
         }
+
+        stage('OWASP ZAP -DAST') {
+            steps {
+                withKubeConfig([credentialsId: "kubeconfig"]){
+                    sh "bash zap.sh"
+                }
+            }
+        }
     }
 
     post {
         always {
             junit 'target/surefire-reports/*.xml'
             jacoco execPattern: 'target/jacoco.exec'
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP Report', reportTitles: 'OWASP ZAP Report', useWrapperFileDirectly: true])
 
             cleanWs()
         }
