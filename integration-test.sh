@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 5
+sleep 15
 
 PORT=$(kubectl -n default get svc ${serviceName} -o json | jq .spec.ports[].nodePort)
 
